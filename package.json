@@ -2,7 +2,8 @@
   "name": "@ngx-patterns/builder",
   "version": "0.0.0",
   "description": "",
-  "main": "./dist/index.js",
+  "main": "./dist/index",
+  "typings": "./dist/index",
   "scripts": {
     "clean": "rimraf dist",
     "lint": "tslint --project .",
@@ -11,10 +12,9 @@
     "watch": "run-s clean dev",
     "dev": "run-p \"compile -- --watch\" \"test -- --notify --watch\"",
     "test": "jest --verbose",
-    "git-add": "git add .",
     "git-push": "git push --follow-tags origin master",
     "new-version": "standard-version --commit-all",
-    "release": "run-s prepare git-add new-version git-push"
+    "release": "run-s prepare new-version git-push"
   },
   "repository": {
     "type": "git",
