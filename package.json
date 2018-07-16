@@ -8,13 +8,13 @@
     "clean": "rimraf dist",
     "lint": "tslint --project .",
     "compile": "tsc --project .",
-    "prepare": "run-s clean lint test compile",
+    "build": "run-s clean lint test compile",
     "watch": "run-s clean dev",
     "dev": "run-p \"compile -- --watch\" \"test -- --notify --watch\"",
     "test": "jest --verbose",
     "git-push": "git push --follow-tags origin master",
     "new-version": "standard-version --commit-all",
-    "release": "run-s prepare new-version git-push"
+    "release": "run-s build new-version git-push"
   },
   "repository": {
     "type": "git",
