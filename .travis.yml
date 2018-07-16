@@ -1,7 +1,9 @@
 language: node_js
 node_js:
 - node
-before_deploy: git checkout .
+cache:
+  directories:
+    - "node_modules"
 deploy:
   provider: npm
   email: marvin@luchs.org
