@@ -23,7 +23,7 @@ export function createBuilder<T>(initializer: Transformation<T>): Builder<T> {
             return this;
         },
         build() {
-            return flow(transformations)({});
+            return <T> flow(transformations)({});
         },
         buildMany(size: number) {
             return times(size, () => this.build());

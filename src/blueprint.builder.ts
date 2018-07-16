@@ -20,7 +20,7 @@ export function createBlueprintBuilder<T>(blueprint: Blueprint<T>): (values?: Pa
     });
 }
 
-function fromBlueprint<T>(blueprint: Blueprint<T>, values?: Partial<T>) {
+function fromBlueprint<T>(blueprint: Blueprint<T>, values?: Partial<T>): T {
     return {
         ...<any> mapValues<Blueprint<T>, any>(
             blueprint,
