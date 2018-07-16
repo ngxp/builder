@@ -4,6 +4,7 @@ node_js:
 cache:
   directories:
     - "node_modules"
+script: npm run build
 deploy:
   provider: npm
   email: marvin@luchs.org
