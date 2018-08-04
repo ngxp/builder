@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/ngx-patterns/builder/compare/v0.2.7...v0.3.0) (2018-08-04)
+
+
+### Features
+
+* allow blueprint to be factory method that returns a blueprint ([05edc1b](https://github.com/ngx-patterns/builder/commit/05edc1b))
+
+
+
 <a name="0.2.7"></a>
 ## [0.2.7](https://github.com/ngx-patterns/builder/compare/v0.2.6...v0.2.7) (2018-07-17)
 
