@@ -1,9 +1,11 @@
-import { isUndefined, mapValues } from 'lodash-es';
+import { isFunction, isUndefined, mapValues } from 'lodash-es';
 import { Builder, createBuilder } from './builder';
 
 export type Blueprint<T> = {
     [P in keyof T]: () => T[P]
 };
+
+export type BlueprintFactory<T> = () => Blueprint<T>;
 
 export type BlueprintBuilder<T> = Builder<T> & BlueprintBuilderMethods<T>;
 
@@ -13,11 +15,14 @@ export type BlueprintBuilderMethods<T> = {
     [P in keyof T]: BlueprintBuilderMethod<T[P], T>;
 };
 
-export function createBlueprintBuilder<T>(blueprint: Blueprint<T>): (values?: Partial<T>) => BlueprintBuilder<T> {
-    return (values?: Partial<T>) => ({
+export function createBlueprintBuilder<T>(blueprintFn: Blueprint<T> | BlueprintFactory<T>): (values?: Partial<T>) => BlueprintBuilder<T> {
+    const blueprint = isFunction(blueprintFn) ? blueprintFn() : blueprintFn;
+    return (values?: Partial<T>) => {
+        return {
         ...createBuilder(() => fromBlueprint(blueprint, values)),
         ...<any> generateBlueprintBuilderMethods(blueprint)
-    });
+        };
+    };
 }
 
 function fromBlueprint<T>(blueprint: Blueprint<T>, values?: Partial<T>): T {
