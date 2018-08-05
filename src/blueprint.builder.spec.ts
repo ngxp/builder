@@ -1,6 +1,6 @@
 import { commerce, random } from 'faker';
 import { isNumber, isString } from 'lodash-es';
-import { Blueprint, createBlueprintBuilder } from './blueprint.builder';
+import { Blueprint, BlueprintFactory, createBlueprintBuilder } from './blueprint.builder';
 
 describe('createBlueprintBuilder', () => {
     interface Product {
@@ -13,8 +13,19 @@ describe('createBlueprintBuilder', () => {
         price: () => random.number({ min: 0.01, max: 99.99, precision: 0.01 })
     };
 
+    const productBlueprintFn: BlueprintFactory<Product> = () => productBlueprint;
+
     it('returns a builder that uses the given blueprint to create a new value', () => {
         const productBuilder = createBlueprintBuilder(productBlueprint);
+
+        const product = productBuilder().build();
+
+        expect(isString(product.name)).toBe(true);
+        expect(isNumber(product.price)).toBe(true);
+    });
+
+    it('accepts a function that returns a blueprint instead of the blueprint itself', () => {
+        const productBuilder = createBlueprintBuilder(productBlueprintFn);
 
         const product = productBuilder().build();
 
