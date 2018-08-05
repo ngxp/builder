@@ -1,8 +1,9 @@
 // tslint:disable:no-invalid-this
-import { flow, times } from 'lodash-es';
+import { cloneDeep, flow, forOwn, isObject, times } from 'lodash-es';
 
 export interface Builder<T> {
     transform(transformation: Transformation<T>): this;
+    freeze(): this;
     build(): T;
     buildMany(size: number): T[];
 }
@@ -22,6 +23,12 @@ export function createBuilder<T>(initializer: Transformation<T>): Builder<T> {
             ];
             return this;
         },
+        freeze() {
+            this.transform(
+                (currentValue: T) => deepFreeze(cloneDeep(currentValue))
+            );
+            return this;
+        },
         build() {
             return <T> flow(transformations)({});
         },
@@ -29,4 +36,18 @@ export function createBuilder<T>(initializer: Transformation<T>): Builder<T> {
             return times(size, () => this.build());
         }
     };
+}
+
+function deepFreeze<T>(obj: T): T {
+    Object.freeze(obj);
+    forOwn(
+        obj,
+        value => {
+            if (isObject(value) && !Object.isFrozen(value)) {
+                deepFreeze(value);
+            }
+        }
+    );
+
+    return obj;
 }

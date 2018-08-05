@@ -1,16 +1,25 @@
 import { clone, isArray } from 'lodash-es';
-import { Transformation, createBuilder } from './builder';
+import { createBuilder, Transformation } from './builder';
 
 describe('createBuilder', () => {
+    interface NestedValue {
+        baz: number;
+    }
+
     interface Value {
         foo: string;
+        bar: NestedValue;
     }
 
     const initialValue: Value = {
-        foo: 'bar'
+        foo: 'bar',
+        bar: {
+            baz: 0
+        }
     };
 
     const transformedValue: Value = {
+        ...initialValue,
         foo: 'BAR'
     };
 
@@ -27,6 +36,19 @@ describe('createBuilder', () => {
         const value = builder.build();
 
         expect(value).toEqual(initialValue);
+    });
+
+    describe('freeze', () => {
+        it('freezes the value', () => {
+            const builder = createBuilder(initializer);
+
+            const value = builder
+                .freeze()
+                .build();
+
+            expect(Object.isFrozen(value)).toBe(true);
+            expect(Object.isFrozen(value.bar)).toBe(true);
+        });
     });
 
     describe('build', () => {
