@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.4.0"></a>
+# [0.4.0](https://github.com/ngx-patterns/builder/compare/v0.3.0...v0.4.0) (2018-08-05)
+
+
+### Features
+
+* add freeze method to builder ([7d9a003](https://github.com/ngx-patterns/builder/commit/7d9a003))
+
+
+
 <a name="0.3.0"></a>
 # [0.3.0](https://github.com/ngx-patterns/builder/compare/v0.2.7...v0.3.0) (2018-08-04)
 
