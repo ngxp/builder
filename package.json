@@ -49,7 +49,7 @@
     "typescript": "2.9.2"
   },
   "dependencies": {
-    "lodash-es": "4.17.10"
+    "lodash-es": "^4.17.0"
   },
   "jest": {
     "transform": {
