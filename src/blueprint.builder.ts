@@ -1,5 +1,5 @@
 import { isFunction, isUndefined, mapValues } from 'lodash-es';
-import { Builder, createBuilder } from './builder';
+import { Builder, createBuilder, Transformation } from './builder';
 
 export type Blueprint<T> = {
     [P in keyof T]: () => T[P]
@@ -17,11 +17,39 @@ export type BlueprintBuilderMethods<T> = {
 
 export function createBlueprintBuilder<T>(blueprintFn: Blueprint<T> | BlueprintFactory<T>): (values?: Partial<T>) => BlueprintBuilder<T> {
     const blueprint = isFunction(blueprintFn) ? blueprintFn() : blueprintFn;
+
     return (values?: Partial<T>) => {
-        return {
-        ...createBuilder(() => fromBlueprint(blueprint, values)),
-        ...<any> generateBlueprintBuilderMethods(blueprint)
-        };
+        return blueprintBuilderFactory(blueprint, [], values);
+    };
+}
+
+function blueprintBuilderFactory<T>(
+    blueprint: Blueprint<T>,
+    transformations: Transformation<T>[] = [],
+    valueOverrides?: Partial<T>
+): BlueprintBuilder<T> {
+    return {
+        ...createBuilder([
+            () => fromBlueprint(blueprint, valueOverrides),
+            ...transformations
+        ]),
+
+        ...<any> generateBlueprintBuilderMethods(
+            blueprint,
+            transformations,
+            valueOverrides
+        ),
+
+        transform(transformation: Transformation<T>) {
+            return blueprintBuilderFactory(
+                blueprint,
+                [
+                    ...transformations,
+                    transformation
+                ],
+                valueOverrides
+            );
+        }
     };
 }
 
@@ -35,18 +63,22 @@ function fromBlueprint<T>(blueprint: Blueprint<T>, values?: Partial<T>): T {
     };
 }
 
-function generateBlueprintBuilderMethods<T>(blueprint: Blueprint<T>): BlueprintBuilderMethods<T> {
+function generateBlueprintBuilderMethods<T>(
+    blueprint: Blueprint<T>,
+    transformations: Transformation<T>[],
+    valueOverrides: Partial<T> = {}
+): BlueprintBuilderMethods<T> {
     return <any> mapValues(
         blueprint,
-        (blueprintFn, prop) => generateBlueprintBuilderMethod(prop)
-    );
-}
-
-function generateBlueprintBuilderMethod<T>(prop: keyof T): BlueprintBuilderMethod<T[keyof T], T> {
-    return function (this: BlueprintBuilder<T>, value: T[keyof T]) {
-        return this.transform((currentValue: Partial<T>) => ({
-            ...<any> currentValue,
-            [prop]: value
-        }));
-    };
+        (blueprintFn, prop) => function (value: T[keyof T]) {
+            return blueprintBuilderFactory(
+                blueprint,
+                transformations,
+                <any> {
+                    ...valueOverrides,
+                    [prop]: value
+                }
+            );
+        }
+    )
 }

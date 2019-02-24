@@ -115,14 +115,15 @@ describe('createBuilder', () => {
     });
 
     describe('transform', () => {
-        it('adds a transformation function to the builder', () => {
+        it('returns a new builder instance with an additional transformation', () => {
             const builder = createBuilder(initialTransformation);
+            const updatedBuilder = builder
+                .transform(transformation);
 
-            const value = builder
-                .transform(transformation)
-                .build();
+            const value = updatedBuilder.build();
 
             expect(value).toEqual(transformedValue);
+            expect(builder).not.toBe(updatedBuilder);
         });
     });
 

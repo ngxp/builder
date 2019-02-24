@@ -1,5 +1,5 @@
 // tslint:disable:no-invalid-this
-import { cloneDeep, flow, forOwn, isObject, times } from 'lodash-es';
+import { cloneDeep, flow, forOwn, isArray, isObject, times } from 'lodash-es';
 
 export interface Builder<T> {
     transform(transformation: Transformation<T>): this;
@@ -11,25 +11,19 @@ export interface Builder<T> {
 export type Transformation<T> = (value: Partial<T>) => Partial<T>;
 
 export function createBuilder<T>(initialTransformation: Transformation<T> | Transformation<T>[]): Builder<T> {
-    const initialTransformations: Transformation<T>[] = isArray(initialTransformation) ? initialTransformation : [initialTransformation];
-
-    let transformations: Transformation<T>[] = [
-        ...initialTransformations
-    ];
+    const transformations: Transformation<T>[] = isArray(initialTransformation) ? initialTransformation : [initialTransformation];
 
     return {
         transform(transformation: Transformation<T>) {
-            transformations = [
+            return createBuilder([
                 ...transformations,
                 transformation
-            ];
-            return this;
+            ]);
         },
         freeze() {
-            this.transform(
+            return this.transform(
                 (currentValue: Partial<T>) => deepFreeze(cloneDeep(currentValue))
             );
-            return this;
         },
         build() {
             return <T> flow(transformations)({});

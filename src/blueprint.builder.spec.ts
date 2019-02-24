@@ -1,6 +1,7 @@
 import { commerce, random } from 'faker';
-import { isNumber, isString } from 'lodash-es';
+import { isNumber, isString, multiply } from 'lodash-es';
 import { Blueprint, BlueprintFactory, createBlueprintBuilder } from './blueprint.builder';
+import { Transformation } from './builder';
 
 describe('createBlueprintBuilder', () => {
     interface Product {
@@ -14,6 +15,17 @@ describe('createBlueprintBuilder', () => {
     };
 
     const productBlueprintFn: BlueprintFactory<Product> = () => productBlueprint;
+
+    const multiplicand = 2;
+    const makeExpensive: Transformation<Product> = product => ({
+        ...product,
+        price: multiply(product.price!, multiplicand)
+    });
+
+    const altName = commerce.productName();
+    const altPrice = random.number({ min: 0.01, max: 99.99, precision: 0.01 });
+    const betterAltPrice = multiply(altPrice, multiplicand);
+
 
     it('returns a builder that uses the given blueprint to create a new value', () => {
         const productBuilder = createBlueprintBuilder(productBlueprint);
@@ -54,17 +66,55 @@ describe('createBlueprintBuilder', () => {
 
     describe('blueprint builder methods', () => {
         it('provides a method for each property of the blueprint that overwrites the blueprint-generated value', () => {
-            const name = productBlueprint.name();
-            const price = productBlueprint.price();
             const productBuilder = createBlueprintBuilder(productBlueprint);
 
             const product = productBuilder()
-                .name(name)
-                .price(price)
+                .name(altName)
+                .price(altPrice)
                 .build();
 
-            expect(product.name).toBe(name);
-            expect(product.price).toBe(price);
+            expect(product.name).toBe(altName);
+            expect(product.price).toBe(altPrice);
+        });
+
+        it('sets the values before any transformations are applied', () => {
+            const productBuilder = createBlueprintBuilder(productBlueprint);
+
+            const product = productBuilder()
+                .transform(makeExpensive)
+                .price(altPrice)
+                .build();
+
+            expect(product.price).toBe(betterAltPrice);
+        });
+
+        it('returns a new blueprint builder instance for each overwritten value', () => {
+            const productBuilder = createBlueprintBuilder(productBlueprint)()
+                .price(altPrice);
+            const betterProductBuilder = productBuilder
+                .price(betterAltPrice);
+
+            const product = productBuilder.build();
+            const betterProduct = betterProductBuilder.build();
+
+            expect(productBuilder).not.toBe(betterProductBuilder);
+            expect(product.price).not.toEqual(betterProduct.price);
+        });
+    });
+
+    describe('transform', () => {
+        it('returns a new blueprint builder instance for each additional transformation', () => {
+            const productBuilder = createBlueprintBuilder(productBlueprint)()
+                .price(altPrice);
+
+            const betterProductBuilder = productBuilder
+                .transform(makeExpensive);
+
+            const product = productBuilder.build();
+            const betterProduct = betterProductBuilder.build();
+
+            expect(productBuilder).not.toBe(betterProductBuilder);
+            expect(product.price).not.toEqual(betterProduct.price);
         });
     });
 });
