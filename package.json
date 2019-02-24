@@ -1,5 +1,5 @@
 {
-  "name": "@ngx-patterns/builder",
+  "name": "@ngxp/builder",
   "version": "0.4.1",
   "description": "",
   "main": "./dist/index",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ngx-patterns/builder.git"
+    "url": "git+https://github.com/ngxp/builder.git"
   },
   "publishConfig": {
     "access": "public"
@@ -26,12 +26,12 @@
   "author": "Marvin Luchs <marvin@luchs.org>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ngx-patterns/builder/issues"
+    "url": "https://github.com/ngxp/builder/issues"
   },
   "files": [
     "dist"
   ],
-  "homepage": "https://github.com/ngx-patterns/builder#readme",
+  "homepage": "https://github.com/ngxp/builder#readme",
   "devDependencies": {
     "@types/faker": "4.1.2",
     "@types/jest": "23.3.0",
