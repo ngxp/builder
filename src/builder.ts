@@ -8,11 +8,13 @@ export interface Builder<T> {
     buildMany(size: number): T[];
 }
 
-export type Transformation<T> = (value: T) => T;
+export type Transformation<T> = (value: Partial<T>) => Partial<T>;
 
-export function createBuilder<T>(initializer: Transformation<T>): Builder<T> {
+export function createBuilder<T>(initialTransformation: Transformation<T> | Transformation<T>[]): Builder<T> {
+    const initialTransformations: Transformation<T>[] = isArray(initialTransformation) ? initialTransformation : [initialTransformation];
+
     let transformations: Transformation<T>[] = [
-        initializer
+        ...initialTransformations
     ];
 
     return {
@@ -25,7 +27,7 @@ export function createBuilder<T>(initializer: Transformation<T>): Builder<T> {
         },
         freeze() {
             this.transform(
-                (currentValue: T) => deepFreeze(cloneDeep(currentValue))
+                (currentValue: Partial<T>) => deepFreeze(cloneDeep(currentValue))
             );
             return this;
         },

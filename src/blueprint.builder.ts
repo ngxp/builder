@@ -44,7 +44,7 @@ function generateBlueprintBuilderMethods<T>(blueprint: Blueprint<T>): BlueprintB
 
 function generateBlueprintBuilderMethod<T>(prop: keyof T): BlueprintBuilderMethod<T[keyof T], T> {
     return function (this: BlueprintBuilder<T>, value: T[keyof T]) {
-        return this.transform((currentValue: T) => ({
+        return this.transform((currentValue: Partial<T>) => ({
             ...<any> currentValue,
             [prop]: value
         }));
