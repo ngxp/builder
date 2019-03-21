@@ -70,6 +70,7 @@ function generateBlueprintBuilderMethods<T>(
 ): BlueprintBuilderMethods<T> {
     return <any> mapValues(
         blueprint,
+        // tslint:disable-next-line: only-arrow-functions
         (blueprintFn, prop) => function (value: T[keyof T]) {
             return blueprintBuilderFactory(
                 blueprint,
@@ -80,5 +81,5 @@ function generateBlueprintBuilderMethods<T>(
                 }
             );
         }
-    )
+    );
 }
