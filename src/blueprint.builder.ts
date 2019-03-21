@@ -76,7 +76,7 @@ function generateBlueprintBuilderMethods<T>(
                 blueprint,
                 transformations,
                 <any> {
-                    ...valueOverrides,
+                    ...<any> valueOverrides,
                     [prop]: value
                 }
             );
