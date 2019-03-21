@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.0"></a>
+# [1.0.0](https://github.com/ngxp/builder/compare/v0.4.1...v1.0.0) (2019-03-21)
+
+
+### Bug Fixes
+
+* event-stream vulnerability ([da98370](https://github.com/ngxp/builder/commit/da98370))
+* typing issue in blueprint builder ([362876d](https://github.com/ngxp/builder/commit/362876d))
+
+
+### Features
+
+* accept an array of initial transformations ([639ca43](https://github.com/ngxp/builder/commit/639ca43))
+* rename to [@ngxp](https://github.com/ngxp)/builder ([8008818](https://github.com/ngxp/builder/commit/8008818))
+* return a new builder instance for each additional transformation ([fee9381](https://github.com/ngxp/builder/commit/fee9381))
+
+
+### BREAKING CHANGES
+
+* transformation parameter and return value are now Partial<T>
+
+
+
 <a name="0.4.0"></a>
 # [0.4.0](https://github.com/ngxp/builder/compare/v0.3.0...v0.4.0) (2018-08-05)
 
