@@ -7,11 +7,13 @@ describe('createBlueprintBuilder', () => {
     interface Product {
         name: string;
         price: number;
+        rating?: number;
     }
 
     const productBlueprint: Blueprint<Product> = {
         name: () => commerce.productName(),
-        price: () => random.number({ min: 0.01, max: 99.99, precision: 0.01 })
+        price: () => random.number({ min: 0.01, max: 99.99, precision: 0.01 }),
+        rating: () => random.number({ min: 1, max: 5 })
     };
 
     const productBlueprintFn: BlueprintFactory<Product> = () => productBlueprint;
@@ -25,6 +27,7 @@ describe('createBlueprintBuilder', () => {
     const altName = commerce.productName();
     const altPrice = random.number({ min: 0.01, max: 99.99, precision: 0.01 });
     const betterAltPrice = multiply(altPrice, multiplicand);
+    const altRating = random.number({ min: 1, max: 5 });
 
 
     it('returns a builder that uses the given blueprint to create a new value', () => {
@@ -71,6 +74,7 @@ describe('createBlueprintBuilder', () => {
             const product = productBuilder()
                 .name(altName)
                 .price(altPrice)
+                .rating(altRating)
                 .build();
 
             expect(product.name).toBe(altName);

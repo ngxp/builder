@@ -12,7 +12,7 @@ export type BlueprintBuilder<T> = Builder<T> & BlueprintBuilderMethods<T>;
 export type BlueprintBuilderMethod<V, T> = (value: V) => BlueprintBuilder<T>;
 
 export type BlueprintBuilderMethods<T> = {
-    [P in keyof T]: BlueprintBuilderMethod<T[P], T>;
+    [P in keyof Required<T>]: BlueprintBuilderMethod<T[P], T>;
 };
 
 export function createBlueprintBuilder<T>(blueprintFn: Blueprint<T> | BlueprintFactory<T>): (values?: Partial<T>) => BlueprintBuilder<T> {
