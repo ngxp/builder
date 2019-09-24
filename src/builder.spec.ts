@@ -6,9 +6,13 @@ describe('createBuilder', () => {
         baz: number;
     }
 
-    interface Value {
+    interface ExtendedNestedValue extends NestedValue {
+        qux: undefined;
+    }
+
+    interface Value<T = NestedValue> {
         foo: string;
-        bar: NestedValue;
+        bar: T;
     }
 
     const initialValue: Value = {
@@ -85,6 +89,15 @@ describe('createBuilder', () => {
 
             expect(mockInitializer).toHaveBeenCalled();
         });
+
+        it('allows overriding the return type by providing a type variable', () => {
+            const builder = createBuilder(initialTransformation);
+
+            const value = builder
+                .build<Value<ExtendedNestedValue>>();
+
+            expect(value.bar.qux).toBeUndefined();
+        });
     });
 
     describe('buildMany', () => {
@@ -94,7 +107,7 @@ describe('createBuilder', () => {
             const builder = createBuilder(initialTransformation)
                 .transform(transformation);
 
-            const values: Value[] = builder.buildMany(size);
+            const values = builder.buildMany(size);
 
             expect(isArray(values)).toBe(true);
             expect(values.length).toBe(size);
@@ -111,6 +124,15 @@ describe('createBuilder', () => {
                 .buildMany(size);
 
             expect(mockInitializer).toHaveBeenCalledTimes(size);
+        });
+
+        it('allows overriding the return type by providing a type variable', () => {
+            const builder = createBuilder(initialTransformation);
+
+            const values = builder
+                .buildMany<Value<ExtendedNestedValue>>(1);
+
+            expect(values[0].bar.qux).toBeUndefined();
         });
     });
 

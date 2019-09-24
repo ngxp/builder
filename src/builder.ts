@@ -4,8 +4,8 @@ import { cloneDeep, flow, forOwn, isArray, isObject, times } from 'lodash-es';
 export interface Builder<T> {
     transform(transformation: Transformation<T>): this;
     freeze(): this;
-    build(): T;
-    buildMany(size: number): T[];
+    build<R = T>(): R;
+    buildMany<R = T>(size: number): R[];
 }
 
 export type Transformation<T> = (value: Partial<T>) => Partial<T>;
@@ -25,11 +25,11 @@ export function createBuilder<T>(initialTransformation: Transformation<T> | Tran
                 (currentValue: Partial<T>) => deepFreeze(cloneDeep(currentValue))
             );
         },
-        build() {
-            return <T> flow(transformations)({});
+        build<R = T>() {
+            return <R> flow(transformations)({});
         },
-        buildMany(size: number) {
-            return times(size, () => this.build());
+        buildMany<R = T>(size: number) {
+            return times(size, () => this.build<R>());
         }
     };
 }
