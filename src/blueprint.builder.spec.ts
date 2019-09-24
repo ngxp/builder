@@ -79,6 +79,7 @@ describe('createBlueprintBuilder', () => {
 
             expect(product.name).toBe(altName);
             expect(product.price).toBe(altPrice);
+            expect(product.rating).toBe(altRating);
         });
 
         it('sets the values before any transformations are applied', () => {
